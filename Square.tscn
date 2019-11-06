@@ -31,3 +31,4 @@ material/0 = null
 shape = SubResource( 4 )
 
 [node name="LeapTimer" type="Timer" parent="."]
+one_shot = true
