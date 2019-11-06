@@ -1,0 +1,43 @@
+[gd_scene load_steps=4 format=2]
+
+[sub_resource type="Shader" id=3]
+code = "shader_type spatial;
+
+uniform float dx = 1.0;
+uniform float dy = 1.0;
+uniform float dz = 1.0;
+
+void fragment() {
+	ALBEDO.x = dx * max(0.5, UV.r * cos(TIME*3.0));
+	ALBEDO.y = dy * max(0.5, UV.x * tan(TIME*3.0));
+	ALBEDO.z = dz * max(0.5, UV.y * sin(TIME*3.0));
+}"
+
+[sub_resource type="ShaderMaterial" id=4]
+shader = SubResource( 3 )
+shader_param/dx = 1.0
+shader_param/dy = 0.8
+shader_param/dz = 0.2
+
+[sub_resource type="SphereMesh" id=2]
+material = SubResource( 4 )
+radius = 0.1
+height = 0.1
+
+[node name="CPUParticles" type="CPUParticles"]
+amount = 10
+mesh = SubResource( 2 )
+emission_shape = 1
+emission_sphere_radius = 1.0
+spread = 96.29
+initial_velocity = 6.38
+initial_velocity_random = 0.29
+angular_velocity = 154.84
+angular_velocity_random = 0.97
+linear_accel = 6.45
+linear_accel_random = 0.09
+radial_accel = 39.79
+radial_accel_random = 0.52
+tangential_accel = 8.6
+tangential_accel_random = 0.03
+color = Color( 1, 0, 0, 1 )
