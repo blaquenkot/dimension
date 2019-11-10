@@ -14,6 +14,8 @@ func _ready():
 	translation.x = 0
 	translation.z = 0
 	snap_to_rail(rail)
+	$RayCastForward.cast_to.x = leap_distance
+	$RayCastBackward.cast_to.x = -leap_distance
 
 func _process(delta):
 	if Input.is_action_just_pressed(\"right\"):
@@ -51,7 +53,20 @@ func _process(delta):
 func leap(direction):
 	$LeapTimer.stop()
 	visible = false
-	move_and_collide(direction * leap_distance)
+
+	var leap_rail
+
+	if direction.x > 0:
+		leap_rail = get_rail_for_forward_leap()
+	else:
+		leap_rail = get_rail_for_backward_leap()
+
+	if leap_rail:
+		translation += leap_distance * direction
+		rail = leap_rail
+	else:
+		move_and_collide(direction * leap_distance)
+
 	visible = true
 
 func snap_to_rail(rail):
@@ -61,7 +76,13 @@ func get_rail_above():
 	return $RayCastUp.get_collider()
 
 func get_rail_below():
-	return $RayCastDown.get_collider()"
+	return $RayCastDown.get_collider()
+
+func get_rail_for_forward_leap():
+	return $RayCastForward.get_collider()
+
+func get_rail_for_backward_leap():
+	return $RayCastBackward.get_collider()"
 
 [sub_resource type="Shader" id=1]
 code = "shader_type spatial;
@@ -102,4 +123,14 @@ collision_mask = 2
 [node name="RayCastDown" type="RayCast" parent="."]
 enabled = true
 cast_to = Vector3( 0, -100, 0 )
+collision_mask = 2
+
+[node name="RayCastForward" type="RayCast" parent="."]
+enabled = true
+cast_to = Vector3( 1, 0, 0 )
+collision_mask = 2
+
+[node name="RayCastBackward" type="RayCast" parent="."]
+enabled = true
+cast_to = Vector3( 1, 0, 0 )
 collision_mask = 2
