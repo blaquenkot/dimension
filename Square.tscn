@@ -1,6 +1,67 @@
 [gd_scene load_steps=6 format=2]
 
-[ext_resource path="res://Square.gd" type="Script" id=1]
+[sub_resource type="GDScript" id=5]
+script/source = "extends KinematicBody
+
+export(NodePath) var initial_rail
+var rail
+var speed = 20
+var leap_distance = speed
+var last_direction
+
+func _ready():
+	rail = get_node(initial_rail)
+	translation.x = 0
+	translation.z = 0
+	snap_to_rail(rail)
+
+func _process(delta):
+	if Input.is_action_just_pressed(\"right\"):
+		if last_direction == \"right\" && !$LeapTimer.is_stopped():
+			leap(Vector3.RIGHT)
+		else:
+			$LeapTimer.start()
+
+	if Input.is_action_just_pressed(\"left\"):
+		if last_direction == \"left\" && !$LeapTimer.is_stopped():
+			leap(Vector3.LEFT)
+		else:
+			$LeapTimer.start()
+
+	if Input.is_action_pressed(\"right\"):
+		last_direction = \"right\"
+		move_and_collide(Vector3.RIGHT * speed * delta)
+	elif Input.is_action_pressed(\"left\"):
+		last_direction = \"left\"
+		move_and_collide(Vector3.LEFT * speed * delta)
+
+	if Input.is_action_just_pressed(\"up\"):
+		var rail_above = get_rail_above()
+
+		if rail_above:
+			snap_to_rail(rail_above)
+			rail = rail_above
+	elif Input.is_action_just_pressed(\"down\"):
+		var rail_below = get_rail_below()
+
+		if rail_below:
+			snap_to_rail(rail_below)
+			rail = rail_below
+
+func leap(direction):
+	$LeapTimer.stop()
+	visible = false
+	move_and_collide(direction * leap_distance)
+	visible = true
+
+func snap_to_rail(rail):
+	translation.y = rail.translation.y
+
+func get_rail_above():
+	return $RayCastUp.get_collider()
+
+func get_rail_below():
+	return $RayCastDown.get_collider()"
 
 [sub_resource type="Shader" id=1]
 code = "shader_type spatial;
@@ -21,7 +82,7 @@ material = SubResource( 2 )
 points = PoolVector3Array( -1, 1, 1, 1, 1, -1, 1, 1, 1, -1, 1, -1, -1, -1, 1, 1, -1, -1, 1, -1, 1, -1, -1, -1, 1, 1, 1, -1, 1, -1, 1, 1, -1, -1, 1, 1, 1, -1, 1, -1, -1, -1, 1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, 1, -1, 1, 1, 1, -1, 1, 1, 1, -1, -1, -1, -1, -1, 1, -1, 1, -1, -1 )
 
 [node name="KinematicBody" type="KinematicBody"]
-script = ExtResource( 1 )
+script = SubResource( 5 )
 
 [node name="MeshInstance" type="MeshInstance" parent="."]
 mesh = SubResource( 3 )
@@ -32,3 +93,13 @@ shape = SubResource( 4 )
 
 [node name="LeapTimer" type="Timer" parent="."]
 one_shot = true
+
+[node name="RayCastUp" type="RayCast" parent="."]
+enabled = true
+cast_to = Vector3( 0, 100, 0 )
+collision_mask = 2
+
+[node name="RayCastDown" type="RayCast" parent="."]
+enabled = true
+cast_to = Vector3( 0, -100, 0 )
+collision_mask = 2

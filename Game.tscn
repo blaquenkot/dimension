@@ -21,7 +21,10 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 24.6038 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.09904, 8.18347 )
 
 [node name="Rail" parent="." instance=ExtResource( 2 )]
-transform = Transform( 100, 0, 0, 0, 0.2, 0, 0, 0, 0.5, 50, 0, 0 )
+transform = Transform( 70, 0, 0, 0, 0.2, 0, 0, 0, 0.5, 35, 0, 0 )
 
 [node name="Rail2" parent="." instance=ExtResource( 2 )]
 transform = Transform( 100, 0, 0, 0, 0.2, 0, 0, 0, 1, 100, 3.706, 0 )
+
+[node name="Rail3" parent="." instance=ExtResource( 2 )]
+transform = Transform( 70, 0, 0, 0, 0.2, 0, 0, 0, 0.5, 120, 0, 0 )
