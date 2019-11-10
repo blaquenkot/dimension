@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://Square.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Rail.tscn" type="PackedScene" id=2]
+[ext_resource path="res://dust.png" type="Texture" id=3]
 
 [sub_resource type="Environment" id=1]
 background_mode = 1
@@ -28,3 +29,21 @@ transform = Transform( 100, 0, 0, 0, 0.2, 0, 0, 0, 1, 100, 3.706, 0 )
 
 [node name="Rail3" parent="." instance=ExtResource( 2 )]
 transform = Transform( 70, 0, 0, 0, 0.2, 0, 0, 0, 0.5, 120, 0, 0 )
+
+[node name="Dust1" type="Sprite3D" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -10 )
+texture = ExtResource( 3 )
+region_enabled = true
+region_rect = Rect2( 0, 0, 80000, 80000 )
+
+[node name="Dust2" type="Sprite3D" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5 )
+texture = ExtResource( 3 )
+region_enabled = true
+region_rect = Rect2( 0, 0, 80000, 80000 )
+
+[node name="Dust3" type="Sprite3D" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -5 )
+texture = ExtResource( 3 )
+region_enabled = true
+region_rect = Rect2( 0, 0, 80000, 80000 )
