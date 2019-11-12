@@ -1,11 +1,12 @@
 [gd_scene load_steps=6 format=2]
 
-[sub_resource type="GDScript" id=5]
+[sub_resource type="GDScript" id=1]
 script/source = "extends KinematicBody
 
 export(NodePath) var initial_rail
 var rail
 var speed = 20
+var idle_speed = speed/4
 var leap_distance = speed
 var last_direction
 
@@ -30,12 +31,15 @@ func _process(delta):
 		else:
 			$LeapTimer.start()
 
+	var velocity = Vector3.RIGHT * idle_speed * delta
 	if Input.is_action_pressed(\"right\"):
 		last_direction = \"right\"
-		move_and_collide(Vector3.RIGHT * speed * delta)
+		velocity += Vector3.RIGHT * speed * delta
 	elif Input.is_action_pressed(\"left\"):
 		last_direction = \"left\"
-		move_and_collide(Vector3.LEFT * speed * delta)
+		velocity += Vector3.LEFT * speed * delta
+	
+	move_and_collide(velocity)
 
 	if Input.is_action_just_pressed(\"up\"):
 		var rail_above = get_rail_above()
@@ -53,6 +57,7 @@ func _process(delta):
 func leap(direction):
 	$LeapTimer.stop()
 	visible = false
+	$CollisionShape.set_disabled(true)
 
 	var leap_rail
 
@@ -60,7 +65,7 @@ func leap(direction):
 		leap_rail = get_rail_for_forward_leap()
 	else:
 		leap_rail = get_rail_for_backward_leap()
-
+	
 	if leap_rail:
 		translation += leap_distance * direction
 		rail = leap_rail
@@ -68,6 +73,7 @@ func leap(direction):
 		move_and_collide(direction * leap_distance)
 
 	visible = true
+	$CollisionShape.set_disabled(false)
 
 func snap_to_rail(rail):
 	translation.y = rail.translation.y
@@ -84,7 +90,7 @@ func get_rail_for_forward_leap():
 func get_rail_for_backward_leap():
 	return $RayCastBackward.get_collider()"
 
-[sub_resource type="Shader" id=1]
+[sub_resource type="Shader" id=2]
 code = "shader_type spatial;
 
 void fragment() {
@@ -93,44 +99,46 @@ void fragment() {
 	ALBEDO.z = UV.r * max(0.4, tan(TIME*5.0));
 }"
 
-[sub_resource type="ShaderMaterial" id=2]
-shader = SubResource( 1 )
+[sub_resource type="ShaderMaterial" id=3]
+shader = SubResource( 2 )
 
-[sub_resource type="CubeMesh" id=3]
-material = SubResource( 2 )
+[sub_resource type="CubeMesh" id=4]
+material = SubResource( 3 )
 
-[sub_resource type="ConvexPolygonShape" id=4]
+[sub_resource type="ConvexPolygonShape" id=5]
 points = PoolVector3Array( -1, 1, 1, 1, 1, -1, 1, 1, 1, -1, 1, -1, -1, -1, 1, 1, -1, -1, 1, -1, 1, -1, -1, -1, 1, 1, 1, -1, 1, -1, 1, 1, -1, -1, 1, 1, 1, -1, 1, -1, -1, -1, 1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, 1, -1, 1, 1, 1, -1, 1, 1, 1, -1, -1, -1, -1, -1, 1, -1, 1, -1, -1 )
 
 [node name="KinematicBody" type="KinematicBody"]
-script = SubResource( 5 )
+collision_mask = 8
+script = SubResource( 1 )
 
 [node name="MeshInstance" type="MeshInstance" parent="."]
-mesh = SubResource( 3 )
+mesh = SubResource( 4 )
 material/0 = null
 
 [node name="CollisionShape" type="CollisionShape" parent="."]
-shape = SubResource( 4 )
+shape = SubResource( 5 )
 
 [node name="LeapTimer" type="Timer" parent="."]
+wait_time = 0.3
 one_shot = true
 
 [node name="RayCastUp" type="RayCast" parent="."]
 enabled = true
 cast_to = Vector3( 0, 100, 0 )
-collision_mask = 2
+collision_mask = 4
 
 [node name="RayCastDown" type="RayCast" parent="."]
 enabled = true
 cast_to = Vector3( 0, -100, 0 )
-collision_mask = 2
+collision_mask = 4
 
 [node name="RayCastForward" type="RayCast" parent="."]
 enabled = true
 cast_to = Vector3( 1, 0, 0 )
-collision_mask = 2
+collision_mask = 4
 
 [node name="RayCastBackward" type="RayCast" parent="."]
 enabled = true
 cast_to = Vector3( 1, 0, 0 )
-collision_mask = 2
+collision_mask = 4

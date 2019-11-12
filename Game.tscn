@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Game.gd" type="Script" id=1]
 [ext_resource path="res://Square.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Rail.tscn" type="PackedScene" id=3]
 [ext_resource path="res://dust.png" type="Texture" id=4]
+[ext_resource path="res://StaticEnemy.tscn" type="PackedScene" id=5]
 
 [sub_resource type="Environment" id=1]
 background_mode = 1
@@ -16,6 +17,7 @@ dust_speed = 1
 environment = SubResource( 1 )
 
 [node name="Square" parent="." instance=ExtResource( 2 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00907135, 0, 0.00878191 )
 initial_rail = NodePath("../Rail")
 
 [node name="Camera" type="Camera" parent="Square"]
@@ -28,10 +30,13 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.09904, 8.18347 )
 transform = Transform( 70, 0, 0, 0, 0.2, 0, 0, 0, 0.5, 35, 0, 0 )
 
 [node name="Rail2" parent="." instance=ExtResource( 3 )]
-transform = Transform( 100, 0, 0, 0, 0.2, 0, 0, 0, 1, 100, 3.706, 0 )
+transform = Transform( 500, 0, 0, 0, 0.2, 0, 0, 0, 1, 420, 4, 0 )
 
 [node name="Rail3" parent="." instance=ExtResource( 3 )]
-transform = Transform( 70, 0, 0, 0, 0.2, 0, 0, 0, 0.5, 120, 0, 0 )
+transform = Transform( 1000, 0, 0, 0, 0.2, 0, 0, 0, 0.5, 580, 0, 0 )
+
+[node name="Rail4" parent="." instance=ExtResource( 3 )]
+transform = Transform( 500, 0, 0, 0, 0.2, 0, 0, 0, 1, 420, -4, 0 )
 
 [node name="Dust1" type="Sprite3D" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -10 )
@@ -50,3 +55,6 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -5 )
 texture = ExtResource( 4 )
 region_enabled = true
 region_rect = Rect2( 0, 0, 80000, 80000 )
+
+[node name="StaticEnemy" parent="." instance=ExtResource( 5 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 125, 0, 0 )

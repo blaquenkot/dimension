@@ -46,6 +46,13 @@ left={
  ]
 }
 
+[layer_names]
+
+3d_physics/layer_1="Player"
+3d_physics/layer_2="Player_Raycast"
+3d_physics/layer_3="Rail"
+3d_physics/layer_4="Enemy"
+
 [rendering]
 
 quality/driver/driver_name="GLES2"
