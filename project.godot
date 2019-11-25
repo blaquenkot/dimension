@@ -52,6 +52,7 @@ left={
 3d_physics/layer_2="Player_Raycast"
 3d_physics/layer_3="Rail"
 3d_physics/layer_4="Enemy"
+3d_physics/layer_5="Player_Area"
 
 [rendering]
 
